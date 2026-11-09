@@ -153,7 +153,7 @@ canvas#out{display:block;cursor:ew-resize;box-shadow:0 10px 40px #0008}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
-<script src="auth.js?v=1"></script>
+<script src="auth.js?v=2"></script>
 <script>
 (async () => {
   const box = document.getElementById("gbox");
@@ -162,8 +162,8 @@ canvas#out{display:block;cursor:ew-resize;box-shadow:0 10px 40px #0008}
   const show = (h) => (box.innerHTML = head + h);
   if (!TM.ready) { show('<p>האתר עדיין לא חובר ל-Supabase.<br>מלאו את config.js לפי ההוראות.</p>'); return; }
   const loginUI = (err) => {
-    show('<p>הכלי זמין למשתמשי פרמיום בלבד. היכנסו עם חשבון גוגל.</p><button class="gbtn" id="gl">' + G + 'כניסה עם גוגל</button>' + (err ? '<div class="gerr">' + err + '</div>' : ''));
-    document.getElementById("gl").onclick = () => TM.login();
+    show('<p>הכלי זמין למשתמשי פרמיום בלבד. היכנסו כדי להמשיך.</p><div id="lf"></div>' + (err ? '<div class="gerr">' + err + '</div>' : ''));
+    TM.renderLogin(document.getElementById("lf"));
   };
   const session = await TM.session();
   if (!session) { loginUI(); return; }

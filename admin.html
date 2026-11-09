@@ -46,7 +46,7 @@ td{padding:10px;border-top:1px solid var(--line);vertical-align:middle}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
-<script src="auth.js?v=1"></script>
+<script src="auth.js?v=2"></script>
 <script>
 const root = document.getElementById("root");
 const esc = TM.esc;
@@ -59,8 +59,8 @@ let me, users = [], invites = [], q = "";
   if (!TM.ready) return box("<h2>לא מחובר ל-Supabase</h2><p class='muted'>מלאו את config.js לפי ההוראות.</p>");
   const s = await TM.session();
   if (!s) {
-    box(`<h2>ניהול האתר</h2><p class="muted">כניסה לאדמין בלבד.</p><button class="gbtn" id="gl">${G} כניסה עם גוגל</button>`);
-    document.getElementById("gl").onclick = () => TM.login();
+    box(`<h2>ניהול האתר</h2><p class="muted">כניסה לאדמין בלבד.</p><div id="lf" style="margin-top:14px"></div>`);
+    TM.renderLogin(document.getElementById("lf"));
     return;
   }
   try { me = await TM.profile(s.user.id); } catch (e) { return box(`<h2>שגיאה</h2><p class="muted">${esc(e.message)}</p>`); }

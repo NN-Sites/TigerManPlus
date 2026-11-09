@@ -67,20 +67,14 @@ $("grid").innerHTML = CLIPS.map(
   </article>`
 ).join("");
 
-fetch("latest.json", { cache: "no-store" })
-  .then((r) => r.json())
-  .then((d) => { if (d.id) CONFIG.likeVideoUrl = "https://www.youtube.com/watch?v=" + d.id; })
-  .catch(() => {});
-
-const videoCards = (list, label, btn) => list.map(
-  (g) => `<a class="card" href="https://youtu.be/${g.videoId}" target="_blank" rel="noopener">
-    <div class="thumb"><img src="https://img.youtube.com/vi/${g.videoId}/hqdefault.jpg" alt="${g.name}" loading="lazy"><span class="play">${label}</span></div>
-    <h3>${g.name}</h3>
-    <span class="btn">${btn}</span>
-  </a>`
-).join("");
-$("guidesGrid").innerHTML = videoCards(GUIDES, "▶ ביוטיוב", "לצפייה במדריך");
-$("soundsGrid").innerHTML = videoCards(SOUNDS, "🎵 ביוטיוב", "להאזנה");
+function refreshLatest() {
+  fetch("latest.json?t=" + Date.now(), { cache: "no-store" })
+    .then((r) => r.json())
+    .then((d) => { if (d.id) CONFIG.likeVideoUrl = "https://www.youtube.com/watch?v=" + d.id; })
+    .catch(() => {});
+}
+refreshLatest();
+setInterval(refreshLatest, 5 * 60 * 1000);
 
 try { localStorage.removeItem("tmp_unlocked"); } catch {}
 

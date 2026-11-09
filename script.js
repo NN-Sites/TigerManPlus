@@ -6,7 +6,14 @@ const CONFIG = {
   likeVideoUrl: "https://www.youtube.com/@TigerManPlus/videos",
   // כמה שניות לחכות אחרי שלחצו על שני הכפתורים
   waitSeconds: 8,
+  discordUrl: "https://discord.gg/JZJ8cC3AZj",
 };
+
+/* ====== מדריכים – נפתחים ביוטיוב ======
+   videoId = החלק אחרי youtu.be/ . להוספת מדריך – עוד שורה. */
+const GUIDES = [
+  { videoId: "cXMfOl3x12Y", name: "אדיטים בפילמורה למתחילים: פרק 1 | טקסט אפקטס" },
+];
 
 /* ====== הקליפים ======
    url = קישור ההורדה (Google Drive / Mega / GitHub Releases וכו').
@@ -14,15 +21,14 @@ const CONFIG = {
 const CLIPS = [
   {
     id: "ramzi",
-    img: "img/ramzi.webp",
     name: "קליפים של ראמזי – קופה ראשית",
     emoji: "🎬",
+    // img: "assets/ramzi.jpg",  // תמונת הקליפ – להוסיף אחרי שהקובץ בריפו
     badges: ["4K", "120FPS", "CC"],
     url: "#REPLACE_WITH_RAMZI_DOWNLOAD_LINK",
   },
   {
     id: "franco",
-    img: "img/franco.webp",
     name: "קליפים של פרנקו – קופה ראשית",
     emoji: "🎬",
     badges: ["4K", "120FPS", "CC"],
@@ -30,7 +36,6 @@ const CLIPS = [
   },
   {
     id: "zahavi",
-    img: "img/zahavi.webp",
     name: "קליפים של ערן זהבי",
     emoji: "🎬",
     badges: ["4K", "60FPS"],
@@ -38,20 +43,17 @@ const CLIPS = [
   },
 ];
 
-/* ====== מדריכים (נפתחים ביוטיוב) ======
-   מוסיפים שורה לכל מדריך: { title, url, desc }  */
-const GUIDES = [];
-
 /* ====== קוד ====== */
 const $ = (id) => document.getElementById(id);
 const subUrl = CONFIG.channelUrl + "?sub_confirmation=1";
 $("navSub").href = subUrl;
 $("heroYt").href = CONFIG.channelUrl;
+["navDiscord","heroDiscord","aboutDiscord"].forEach((id) => ($(id).href = CONFIG.discordUrl));
 $("year").textContent = new Date().getFullYear();
 
 $("grid").innerHTML = CLIPS.map(
   (c) => `<article class="card">
-    <img class="thumb" src="${c.img}" alt="${c.name}" loading="lazy">
+    <div class="thumb">${c.img ? `<img src="${c.img}" alt="${c.name}" loading="lazy">` : c.emoji}</div>
     <h3>${c.name}</h3>
     <div class="badges">${c.badges.map((b) => `<span class="badge">${b}</span>`).join("")}</div>
     <button class="btn" data-id="${c.id}">הורדה ⬇</button>
@@ -62,6 +64,14 @@ fetch("latest.json", { cache: "no-store" })
   .then((r) => r.json())
   .then((d) => { if (d.id) CONFIG.likeVideoUrl = "https://www.youtube.com/watch?v=" + d.id; })
   .catch(() => {});
+
+$("guidesGrid").innerHTML = GUIDES.map(
+  (g) => `<a class="card" href="https://youtu.be/${g.videoId}" target="_blank" rel="noopener">
+    <div class="thumb"><img src="https://img.youtube.com/vi/${g.videoId}/hqdefault.jpg" alt="${g.name}" loading="lazy"><span class="play">▶ ביוטיוב</span></div>
+    <h3>${g.name}</h3>
+    <span class="btn">לצפייה במדריך</span>
+  </a>`
+).join("");
 
 const store = {
   get: () => { try { return localStorage.getItem("tmp_unlocked") === "1"; } catch { return false; } },
@@ -115,9 +125,3 @@ $("dl").addEventListener("click", () => {
 $("close").addEventListener("click", () => ($("overlay").hidden = true));
 $("overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") $("overlay").hidden = true; });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("overlay").hidden = true; });
-
-const guides = GUIDES.length ? GUIDES : [{
-  title: "כל המדריכים בערוץ", desc: "מדריכים חדשים בדרך – בינתיים אפשר לראות הכל בערוץ", url: CONFIG.channelUrl + "/videos",
-}];
-$("guides").innerHTML = guides.map((g) => `<a class="guide" href="${g.url}" target="_blank" rel="noopener">
-  <span class="play">▶</span><div><h3>${g.title}</h3><p>${g.desc || "לצפייה ביוטיוב"}</p></div></a>`).join("");

@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TigerManPlus | קליפים לעורכים</title>
-<meta name="description" content="TigerManPlus – אדיטים באפטר אפקטס וקליפים להורדה לעורכים (4K 120FPS + CC).">
+<title>TigerManPlus | קליפים ומדריכים לעורכים</title>
+<meta name="description" content="TigerManPlus – אדיטים באפטר אפקטס, קליפים להורדה לעורכים (4K) ומדריכים.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&family=Gveret+Levin&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,6 +18,7 @@
     <a href="#clips">קליפים</a>
     <a href="#guides">מדריכים</a>
     <a href="#about">אודות</a>
+    <a class="btn btn-small btn-discord" id="navDiscord" target="_blank" rel="noopener">דיסקורד</a>
     <a class="btn btn-small" id="navSub" target="_blank" rel="noopener">הירשמו לערוץ</a>
   </nav>
 </header>
@@ -23,28 +27,31 @@
   <section class="hero">
     <p class="tag">After Effects • Edits • Free Clips</p>
     <h1>TigerMan<span>Plus</span></h1>
-    <p class="sub">אדיטים באפטר אפקטס, וקליפים איכותיים להורדה – ישר לעורכים.</p>
+    <p class="scribble">קליפים בחינם לעורכים 🔥</p>
+    <p class="sub">אדיטים באפטר אפקטס, קליפים איכותיים להורדה ומדריכים – הכל במקום אחד.</p>
     <div class="cta">
       <a class="btn" href="#clips">להורדת קליפים ↓</a>
       <a class="btn btn-ghost" id="heroYt" target="_blank" rel="noopener">▶ לערוץ ביוטיוב</a>
+      <a class="btn btn-ghost" id="heroDiscord" target="_blank" rel="noopener">💬 הצטרפו לדיסקורד</a>
     </div>
   </section>
 
   <section id="clips" class="section">
-    <h2>קליפים להורדה</h2>
+    <h2>קליפים <em>להורדה</em></h2>
     <p class="lead">כדי להוריד: הירשמו לערוץ + תעשו לייק לסרטון. זה לוקח 10 שניות 🙌</p>
     <div class="grid" id="grid"></div>
   </section>
 
   <section id="guides" class="section">
-    <h2>מדריכים</h2>
-    <p class="lead">מדריכי עריכה באפטר אפקטס – נפתחים ביוטיוב.</p>
-    <div class="guides" id="guides"></div>
+    <h2>מדריכים <em>ביוטיוב</em></h2>
+    <p class="lead">מדריכי עריכה שנפתחים ישר ביוטיוב.</p>
+    <div class="grid" id="guidesGrid"></div>
   </section>
 
   <section id="about" class="section about">
-    <h2>על הערוץ</h2>
-    <p>הערוץ TigerManPlus עוסק באדיטים באפטר אפקטס. כאן תמצאו חבילות קליפים מוכנות לעריכה – באיכות 4K, 120FPS ועם CC – כדי שתוכלו לייצר אדיטים ברמה הכי גבוהה.</p>
+    <h2>על <em>הערוץ</em></h2>
+    <p>הערוץ TigerManPlus עוסק באדיטים באפטר אפקטס. כאן תמצאו חבילות קליפים מוכנות לעריכה – באיכות 4K – ומדריכים, כדי שתוכלו לייצר אדיטים ברמה הכי גבוהה.</p>
+    <a class="btn btn-discord" id="aboutDiscord" target="_blank" rel="noopener">💬 לקהילה בדיסקורד</a>
   </section>
 </main>
 

@@ -82,7 +82,7 @@ $("toolsGrid").innerHTML = TOOLS.map((t) => {
   const live = t.status === "live" && t.url;
   if (live) return `<article class="card tool">
     <div class="tico">${t.icon}</div><h3>${t.name}</h3>${t.premium ? '<div class="badges"><span class="badge">👑 פרמיום</span></div>' : ""}<p class="tdesc">${t.desc}</p>
-    <a class="btn" href="${t.url}">${t.premium ? "כניסה עם גוגל" : "לפתיחת הכלי"}</a></article>`;
+    <a class="btn" href="${t.url}">${t.premium ? "כניסה לכלי" : "לפתיחת הכלי"}</a></article>`;
   return `<article class="card tool locked">
     <div class="lockbadge">${LOCK_SVG}</div>
     <div class="tico">${t.icon}</div><h3>${t.name}</h3><p class="tdesc">${t.desc}</p>

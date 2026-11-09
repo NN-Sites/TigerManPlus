@@ -14,6 +14,7 @@ const CONFIG = {
 const CLIPS = [
   {
     id: "ramzi",
+    img: "img/ramzi.webp",
     name: "קליפים של ראמזי – קופה ראשית",
     emoji: "🎬",
     badges: ["4K", "120FPS", "CC"],
@@ -21,6 +22,7 @@ const CLIPS = [
   },
   {
     id: "franco",
+    img: "img/franco.webp",
     name: "קליפים של פרנקו – קופה ראשית",
     emoji: "🎬",
     badges: ["4K", "120FPS", "CC"],
@@ -28,12 +30,17 @@ const CLIPS = [
   },
   {
     id: "zahavi",
+    img: "img/zahavi.webp",
     name: "קליפים של ערן זהבי",
     emoji: "🎬",
     badges: ["4K", "60FPS"],
     url: "https://drive.google.com/file/d/1kYudo0TE2Ue5uTFJUmbZyVvkBwziYHhr/view?usp=drive_link",
   },
 ];
+
+/* ====== מדריכים (נפתחים ביוטיוב) ======
+   מוסיפים שורה לכל מדריך: { title, url, desc }  */
+const GUIDES = [];
 
 /* ====== קוד ====== */
 const $ = (id) => document.getElementById(id);
@@ -44,7 +51,7 @@ $("year").textContent = new Date().getFullYear();
 
 $("grid").innerHTML = CLIPS.map(
   (c) => `<article class="card">
-    <div class="thumb">${c.emoji}</div>
+    <img class="thumb" src="${c.img}" alt="${c.name}" loading="lazy">
     <h3>${c.name}</h3>
     <div class="badges">${c.badges.map((b) => `<span class="badge">${b}</span>`).join("")}</div>
     <button class="btn" data-id="${c.id}">הורדה ⬇</button>
@@ -108,3 +115,9 @@ $("dl").addEventListener("click", () => {
 $("close").addEventListener("click", () => ($("overlay").hidden = true));
 $("overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") $("overlay").hidden = true; });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("overlay").hidden = true; });
+
+const guides = GUIDES.length ? GUIDES : [{
+  title: "כל המדריכים בערוץ", desc: "מדריכים חדשים בדרך – בינתיים אפשר לראות הכל בערוץ", url: CONFIG.channelUrl + "/videos",
+}];
+$("guides").innerHTML = guides.map((g) => `<a class="guide" href="${g.url}" target="_blank" rel="noopener">
+  <span class="play">▶</span><div><h3>${g.title}</h3><p>${g.desc || "לצפייה ביוטיוב"}</p></div></a>`).join("");

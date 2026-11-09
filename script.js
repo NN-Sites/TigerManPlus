@@ -82,10 +82,7 @@ const videoCards = (list, label, btn) => list.map(
 $("guidesGrid").innerHTML = videoCards(GUIDES, "▶ ביוטיוב", "לצפייה במדריך");
 $("soundsGrid").innerHTML = videoCards(SOUNDS, "🎵 ביוטיוב", "להאזנה");
 
-const store = {
-  get: () => { try { return localStorage.getItem("tmp_unlocked") === "1"; } catch { return false; } },
-  set: () => { try { localStorage.setItem("tmp_unlocked", "1"); } catch {} },
-};
+try { localStorage.removeItem("tmp_unlocked"); } catch {}
 
 let current = null, clicked = { sub: false, like: false }, timer = null;
 
@@ -109,7 +106,6 @@ function refresh() {
 
 function openGate(clip) {
   current = clip;
-  if (store.get()) return startDownload(clip);
   clicked = { sub: false, like: false };
   clearTimeout(timer); timer = null;
   $("mName").textContent = clip.name;
@@ -129,7 +125,7 @@ $("subBtn").addEventListener("click", () => { clicked.sub = true; refresh(); });
 $("likeBtn").addEventListener("click", () => { clicked.like = true; refresh(); });
 $("chk").addEventListener("change", () => { $("dl").disabled = !$("chk").checked; });
 $("dl").addEventListener("click", () => {
-  store.set(); $("overlay").hidden = true; startDownload(current);
+  $("overlay").hidden = true; startDownload(current);
 });
 $("close").addEventListener("click", () => ($("overlay").hidden = true));
 $("overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") $("overlay").hidden = true; });

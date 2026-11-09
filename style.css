@@ -95,3 +95,11 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 5vw;display
 .tdesc{color:var(--mute);padding:0 6px;line-height:1.6}
 .btn-off{background:#ffffff10;color:var(--mute);border:1px dashed #ffffff30;cursor:default}
 .btn-off:hover{transform:none;box-shadow:none}.btn-off::after{display:none}
+
+.locked{position:relative;overflow:hidden}
+.locked .tico,.locked h3,.locked .tdesc{opacity:.45;filter:grayscale(.5)}
+.lockbadge{position:absolute;top:16px;left:16px;width:58px;height:58px;border-radius:50%;background:#000c;border:1px solid #ffa53d66;display:grid;place-items:center;z-index:2;animation:lockwob 3.2s ease-in-out infinite}
+@keyframes lockwob{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-12deg)}94%{transform:rotate(10deg)}97%{transform:rotate(-6deg)}}
+.lockmsg{margin:0 6px;padding:10px 14px;border-radius:14px;background:#ff6a001a;border:1px dashed #ff6a0066;color:var(--o2);font-weight:700;font-family:Assistant,sans-serif;font-size:1.05rem}
+.btn-lock{background:#ffffff12;color:var(--text);border:1px solid #ffffff30}
+.btn-lock:hover{border-color:var(--o)}

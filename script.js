@@ -10,7 +10,9 @@ const CONFIG = {
 };
 
 /* ====== כלים ======
-   status: "soon" = בקרוב (לא לחיץ) | "live" = זמין, ואז מוסיפים url. */
+   כל כלי נעול עד שיש מספיק לייקים לסרטון UNLOCK.videoId.
+   כשכלי נפתח: משנים status ל-"live" ומוסיפים url. */
+const UNLOCK = { likes: 500, videoId: "J62yIY5scko" };
 const TOOLS = [
   { name: "שיפור איכות AI", desc: "מעלים וידאו ומקבלים אותו חד, נקי ובאיכות גבוהה יותר – עד 4K.", icon: "✨", status: "soon" },
   { name: "מחיקת רקע מתמונה", desc: "מוחקים רקע מתמונה בלחיצה אחת ומקבלים PNG שקוף, מוכן לעריכה.", icon: "🖼️", status: "soon" },
@@ -75,13 +77,17 @@ $("grid").innerHTML = CLIPS.map(
   </article>`
 ).join("");
 
+const LOCK_SVG = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5" fill="#ffa53d"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" stroke="#ffa53d" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="15.7" r="1.6" fill="#1b0e00"/></svg>';
 $("toolsGrid").innerHTML = TOOLS.map((t) => {
   const live = t.status === "live" && t.url;
-  return `<article class="card tool">
-    <div class="tico">${t.icon}</div>
-    <h3>${t.name}</h3>
-    <p class="tdesc">${t.desc}</p>
-    ${live ? `<a class="btn" href="${t.url}" target="_blank" rel="noopener">לפתיחת הכלי</a>` : `<span class="btn btn-off">בקרוב</span>`}
+  if (live) return `<article class="card tool">
+    <div class="tico">${t.icon}</div><h3>${t.name}</h3><p class="tdesc">${t.desc}</p>
+    <a class="btn" href="${t.url}" target="_blank" rel="noopener">לפתיחת הכלי</a></article>`;
+  return `<article class="card tool locked">
+    <div class="lockbadge">${LOCK_SVG}</div>
+    <div class="tico">${t.icon}</div><h3>${t.name}</h3><p class="tdesc">${t.desc}</p>
+    <p class="lockmsg">🔒 נפתח רק ב-${UNLOCK.likes} לייקים לסרטון הזה</p>
+    <a class="btn btn-lock" href="https://youtu.be/${UNLOCK.videoId}" target="_blank" rel="noopener">לסרטון – תעשו לייק 👍</a>
   </article>`;
 }).join("");
 

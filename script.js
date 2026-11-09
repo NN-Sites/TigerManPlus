@@ -11,6 +11,11 @@ const CONFIG = {
 
 /* ====== מדריכים – נפתחים ביוטיוב ======
    videoId = החלק אחרי youtu.be/ . להוספת מדריך – עוד שורה. */
+const SOUNDS = [
+  { videoId: "wrM-V9A2OF0", name: "Sem Pensar Phonk" },
+  { videoId: "msYNX5zw1s8", name: "TIGARO PHONK (SPEED UP)" },
+];
+
 const GUIDES = [
   { videoId: "cXMfOl3x12Y", name: "אדיטים בפילמורה למתחילים: פרק 1 | טקסט אפקטס" },
 ];
@@ -65,13 +70,15 @@ fetch("latest.json", { cache: "no-store" })
   .then((d) => { if (d.id) CONFIG.likeVideoUrl = "https://www.youtube.com/watch?v=" + d.id; })
   .catch(() => {});
 
-$("guidesGrid").innerHTML = GUIDES.map(
+const videoCards = (list, label, btn) => list.map(
   (g) => `<a class="card" href="https://youtu.be/${g.videoId}" target="_blank" rel="noopener">
-    <div class="thumb"><img src="https://img.youtube.com/vi/${g.videoId}/hqdefault.jpg" alt="${g.name}" loading="lazy"><span class="play">▶ ביוטיוב</span></div>
+    <div class="thumb"><img src="https://img.youtube.com/vi/${g.videoId}/hqdefault.jpg" alt="${g.name}" loading="lazy"><span class="play">${label}</span></div>
     <h3>${g.name}</h3>
-    <span class="btn">לצפייה במדריך</span>
+    <span class="btn">${btn}</span>
   </a>`
 ).join("");
+$("guidesGrid").innerHTML = videoCards(GUIDES, "▶ ביוטיוב", "לצפייה במדריך");
+$("soundsGrid").innerHTML = videoCards(SOUNDS, "🎵 ביוטיוב", "להאזנה");
 
 const store = {
   get: () => { try { return localStorage.getItem("tmp_unlocked") === "1"; } catch { return false; } },

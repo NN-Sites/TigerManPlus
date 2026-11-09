@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ניהול | TigerManPlus</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600;800&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=8">
+<style>
+.wrap{max-width:1000px;margin:0 auto;padding:30px 5vw 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top h1{direction:rtl;text-align:right;font-size:clamp(1.8rem,5vw,2.6rem);margin:0}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.stat{flex:1;min-width:130px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 18px}
+.stat b{display:block;font:800 2rem Assistant,sans-serif;color:var(--o2)}
+.stat span{color:var(--mute);font-size:.9rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:22px}
+.panel h2{font-size:1.3rem;margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=text],input[type=email],select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font:inherit}
+input:focus,select:focus{outline:0;border-color:var(--o)}
+.grow{flex:1;min-width:180px}
+table{width:100%;border-collapse:collapse}
+th{color:var(--mute);font-weight:600;font-size:.82rem;text-align:right;padding:8px 10px}
+td{padding:10px;border-top:1px solid var(--line);vertical-align:middle}
+.usr{display:flex;align-items:center;gap:10px}
+.usr img,.usr .av{width:36px;height:36px;border-radius:50%;background:#ff6a0033;flex:none;object-fit:cover;display:grid;place-items:center;font-weight:800}
+.usr div{line-height:1.3;min-width:0}.usr small{color:var(--mute);direction:ltr;display:block;overflow:hidden;text-overflow:ellipsis}
+.pill{font:800 .78rem Assistant,sans-serif;padding:2px 12px;border-radius:99px;white-space:nowrap}
+.pill.on{background:#2ecc7122;color:#4ee08a}.pill.off{background:#ffffff12;color:var(--mute)}.pill.adm{background:#ff6a0022;color:var(--o2)}.pill.exp{background:#ff4d4d22;color:#ff8a8a}
+.sm{padding:6px 14px;font-size:.85rem}
+.btn-red{background:#ff4d4d22;color:#ff8a8a;border:1px solid #ff4d4d55}
+.msg{padding:10px 14px;border-radius:12px;background:#ff6a001a;border:1px dashed #ff6a0066;color:var(--o2);margin-bottom:16px}
+.msg.err{background:#ff4d4d1a;border-color:#ff4d4d66;color:#ff8a8a}
+.center{min-height:70vh;display:grid;place-items:center;text-align:center}
+.cbox{max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border-radius:99px;border:0;background:#fff;color:#222;font:700 1rem Heebo,sans-serif;cursor:pointer;margin-top:16px}
+.gbtn svg{width:20px;height:20px}
+.empty{color:var(--mute);padding:14px 4px}
+@media(max-width:700px){th:nth-child(3),td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<div id="root"><div class="center"><p class="muted">טוען…</p></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="auth.js?v=1"></script>
+<script>
+const root = document.getElementById("root");
+const esc = TM.esc;
+const G = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>';
+
+const box = (html) => (root.innerHTML = `<div class="center"><div class="cbox">${html}</div></div>`);
+let me, users = [], invites = [], q = "";
+
+(async function init() {
+  if (!TM.ready) return box("<h2>לא מחובר ל-Supabase</h2><p class='muted'>מלאו את config.js לפי ההוראות.</p>");
+  const s = await TM.session();
+  if (!s) {
+    box(`<h2>ניהול האתר</h2><p class="muted">כניסה לאדמין בלבד.</p><button class="gbtn" id="gl">${G} כניסה עם גוגל</button>`);
+    document.getElementById("gl").onclick = () => TM.login();
+    return;
+  }
+  try { me = await TM.profile(s.user.id); } catch (e) { return box(`<h2>שגיאה</h2><p class="muted">${esc(e.message)}</p>`); }
+  if (!me || !me.is_admin) {
+    box(`<h2>אין הרשאה</h2><p class="muted">${esc(s.user.email)} אינו אדמין.</p><button class="btn btn-ghost" id="lo">יציאה</button>`);
+    document.getElementById("lo").onclick = () => TM.logout();
+    return;
+  }
+  await load();
+})();
+
+async function load() {
+  const [u, i] = await Promise.all([
+    TM.sb.from("profiles").select("*").order("created_at", { ascending: false }),
+    TM.sb.from("premium_invites").select("*").order("created_at", { ascending: false }),
+  ]);
+  if (u.error) return box(`<h2>שגיאה</h2><p class="muted">${esc(u.error.message)}</p>`);
+  users = u.data; invites = i.data || [];
+  draw();
+}
+
+const active = (p) => p.premium && (!p.premium_until || new Date(p.premium_until) > new Date());
+const fmt = (d) => d ? new Date(d).toLocaleDateString("he-IL") : "";
+const untilFor = (v) => v === "forever" ? null : new Date(Date.now() + (+v) * 864e5).toISOString();
+
+function draw(note, err) {
+  const list = users.filter((p) => !q || (p.email + " " + (p.name || "")).toLowerCase().includes(q.toLowerCase()));
+  const nPrem = users.filter(active).length;
+  root.innerHTML = `<div class="wrap">
+    <div class="top"><h1>ניהול <em style="font-style:normal;font-family:'Gveret Levin',cursive;font-weight:400;color:var(--o2)">פרמיום</em></h1>
+      <div class="row"><a class="btn btn-ghost sm" href="./">לאתר</a><a class="btn btn-ghost sm" href="enhancer.html">לכלי</a><button class="btn btn-ghost sm" id="lo">יציאה</button></div></div>
+    ${note ? `<div class="msg ${err ? "err" : ""}">${esc(note)}</div>` : ""}
+    <div class="stats">
+      <div class="stat"><b>${users.length}</b><span>משתמשים רשומים</span></div>
+      <div class="stat"><b>${nPrem}</b><span>פרמיום פעילים</span></div>
+      <div class="stat"><b>${invites.length}</b><span>הזמנות ממתינות</span></div>
+    </div>
+
+    <div class="panel"><h2>הוספת פרמיום לפי מייל</h2>
+      <p class="muted" style="margin-bottom:10px">אם המשתמש כבר נרשם – יהפוך לפרמיום מיד. אם לא – יקבל פרמיום אוטומטית כשייכנס בפעם הראשונה.</p>
+      <form class="row" id="addForm">
+        <input class="grow" type="email" id="aEmail" placeholder="gmail של המשתמש" required>
+        <select id="aDur"><option value="30">30 יום</option><option value="90">90 יום</option><option value="365">שנה</option><option value="forever">ללא הגבלה</option></select>
+        <button class="btn sm" type="submit">הוספה</button>
+      </form></div>
+
+    ${invites.length ? `<div class="panel"><h2>הזמנות ממתינות</h2><table><tbody>${invites.map((v) => `<tr><td style="direction:ltr;text-align:right">${esc(v.email)}</td><td>${v.premium_until ? "עד " + fmt(v.premium_until) : "ללא הגבלה"}</td><td><button class="btn btn-red sm" data-inv="${esc(v.email)}">ביטול</button></td></tr>`).join("")}</tbody></table></div>` : ""}
+
+    <div class="panel"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0">משתמשים</h2>
+      <input type="text" id="search" class="grow" style="max-width:260px" placeholder="חיפוש…" value="${esc(q)}"></div>
+      ${list.length ? `<table><thead><tr><th>משתמש</th><th>סטטוס</th><th>הצטרף</th><th>פעולות</th></tr></thead><tbody>${list.map(row).join("")}</tbody></table>` : `<p class="empty">אין משתמשים להצגה.</p>`}
+    </div></div>`;
+  document.getElementById("lo").onclick = () => TM.logout();
+  document.getElementById("addForm").onsubmit = onInvite;
+  const se = document.getElementById("search");
+  se.oninput = () => { q = se.value; const pos = se.selectionStart; draw(); const n = document.getElementById("search"); n.focus(); n.setSelectionRange(pos, pos); };
+  root.querySelectorAll("[data-act]").forEach((b) => (b.onclick = () => act(b.dataset.act, b.dataset.id, b)));
+  root.querySelectorAll("[data-inv]").forEach((b) => (b.onclick = () => rmInvite(b.dataset.inv)));
+}
+
+function row(p) {
+  const on = active(p), expired = p.premium && !on;
+  const status = (p.is_admin ? '<span class="pill adm">אדמין</span> ' : "") +
+    (on ? `<span class="pill on">פרמיום${p.premium_until ? " עד " + fmt(p.premium_until) : ""}</span>` : expired ? '<span class="pill exp">פג תוקף</span>' : '<span class="pill off">רגיל</span>');
+  const av = p.avatar ? `<img src="${esc(p.avatar)}" alt="" referrerpolicy="no-referrer">` : `<span class="av">${esc((p.name || p.email)[0].toUpperCase())}</span>`;
+  const sel = `<select id="d-${p.id}" class="sm" style="padding:6px 10px"><option value="30">30 יום</option><option value="90">90 יום</option><option value="365">שנה</option><option value="forever">ללא הגבלה</option></select>`;
+  const actions = on
+    ? `<button class="btn btn-red sm" data-act="off" data-id="${p.id}">הסרת פרמיום</button>`
+    : `${sel} <button class="btn sm" data-act="on" data-id="${p.id}">הפעלת פרמיום</button>`;
+  return `<tr><td><div class="usr">${av}<div><b>${esc(p.name || "—")}</b><small>${esc(p.email)}</small></div></div></td><td>${status}</td><td>${fmt(p.created_at)}</td><td><div class="row">${actions}${on ? ` ${sel}<button class="btn btn-ghost sm" data-act="ext" data-id="${p.id}">הארכה</button>` : ""}</div></td></tr>`;
+}
+
+async function act(kind, id, btn) {
+  btn.disabled = true;
+  const sel = document.getElementById("d-" + id);
+  let patch;
+  if (kind === "off") patch = { premium: false, premium_until: null };
+  else patch = { premium: true, premium_until: untilFor(sel.value) };
+  const { error } = await TM.sb.from("profiles").update(patch).eq("id", id);
+  if (error) return draw("שגיאה: " + error.message, true);
+  const { data } = await TM.sb.from("profiles").select("*").order("created_at", { ascending: false });
+  users = data || users;
+  draw(kind === "off" ? "הפרמיום הוסר." : "הפרמיום עודכן.");
+}
+
+async function onInvite(e) {
+  e.preventDefault();
+  const email = document.getElementById("aEmail").value.trim().toLowerCase();
+  const until = untilFor(document.getElementById("aDur").value);
+  const existing = users.find((u) => u.email === email);
+  if (existing) {
+    const { error } = await TM.sb.from("profiles").update({ premium: true, premium_until: until }).eq("id", existing.id);
+    if (error) return draw("שגיאה: " + error.message, true);
+    await load(); return draw(email + " הוא עכשיו פרמיום.");
+  }
+  const { error } = await TM.sb.from("premium_invites").upsert({ email, premium_until: until });
+  if (error) return draw("שגיאה: " + error.message, true);
+  await load(); draw(email + " יקבל פרמיום בכניסה הראשונה.");
+}
+
+async function rmInvite(email) {
+  const { error } = await TM.sb.from("premium_invites").delete().eq("email", email);
+  if (error) return draw("שגיאה: " + error.message, true);
+  await load(); draw("ההזמנה בוטלה.");
+}
+</script>
+</body>
+</html>

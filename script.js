@@ -14,7 +14,7 @@ const CONFIG = {
    כשכלי נפתח: משנים status ל-"live" ומוסיפים url. */
 const UNLOCK = { likes: 500, videoId: "J62yIY5scko" };
 const TOOLS = [
-  { name: "שיפור איכות AI", desc: "מעלים וידאו ומקבלים אותו חד, נקי ובאיכות גבוהה יותר – עד 4K.", icon: "✨", status: "soon" },
+  { name: "שיפור איכות AI", desc: "מעלים וידאו ומקבלים אותו חד, נקי ובאיכות גבוהה יותר – עד 4K.", icon: "✨", status: "live", url: "enhancer.html", premium: true },
   { name: "מחיקת רקע מתמונה", desc: "מוחקים רקע מתמונה בלחיצה אחת ומקבלים PNG שקוף, מוכן לעריכה.", icon: "🖼️", status: "soon" },
   { name: "יוצר CC", desc: "יוצרים צבעים ותיקוני CC מקצועיים לקליפים, בלי להתעסק עם הגדרות.", icon: "🎨", status: "soon" },
 ];
@@ -81,8 +81,8 @@ const LOCK_SVG = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none"><r
 $("toolsGrid").innerHTML = TOOLS.map((t) => {
   const live = t.status === "live" && t.url;
   if (live) return `<article class="card tool">
-    <div class="tico">${t.icon}</div><h3>${t.name}</h3><p class="tdesc">${t.desc}</p>
-    <a class="btn" href="${t.url}" target="_blank" rel="noopener">לפתיחת הכלי</a></article>`;
+    <div class="tico">${t.icon}</div><h3>${t.name}</h3>${t.premium ? '<div class="badges"><span class="badge">👑 פרמיום</span></div>' : ""}<p class="tdesc">${t.desc}</p>
+    <a class="btn" href="${t.url}">${t.premium ? "כניסה עם גוגל" : "לפתיחת הכלי"}</a></article>`;
   return `<article class="card tool locked">
     <div class="lockbadge">${LOCK_SVG}</div>
     <div class="tico">${t.icon}</div><h3>${t.name}</h3><p class="tdesc">${t.desc}</p>

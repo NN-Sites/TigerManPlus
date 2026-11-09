@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>שיפור איכות AI | TigerManPlus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600;800&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--panel:#12141c;--panel2:#191c27;--line:#262a38;--text:#e9ecf5;--muted:#8a90a6;
+  --accent:#ff6a00;--accent2:#ffa53d;--good:#34d399;--warn:#fbbf24;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:14px/1.45 Heebo,system-ui,"Segoe UI",Arial,sans-serif;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#1d1208,#0d0d14)}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800}
+header h1{font-size:17px;margin:0}
+header .sub{color:var(--muted);font-size:12px}
+header .sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:8px 14px;border-radius:9px;cursor:pointer;font:inherit;font-weight:600;transition:.15s}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#ff8a2b);border:0}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+main{flex:1;display:grid;grid-template-columns:340px 1fr;min-height:0}
+aside{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:14px}
+.sec{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.sec h3{margin:0 0 10px;font-size:13px;letter-spacing:.3px;color:#ffd9b3;display:flex;align-items:center;gap:6px}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.preset{padding:8px;border-radius:8px;border:1px solid var(--line);background:#0f1118;color:var(--text);cursor:pointer;font:inherit;font-size:12.5px;text-align:center}
+.preset:hover,.preset.on{border-color:var(--accent);background:#2a1608}
+.row{margin:8px 0}
+.row label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:3px}
+.row label b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent);direction:ltr}
+select{width:100%;padding:7px;border-radius:8px;background:#0f1118;color:var(--text);border:1px solid var(--line);font:inherit}
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0}
+.viewport{flex:1;position:relative;overflow:auto;display:grid;place-items:center;background:
+  repeating-conic-gradient(#0d0f15 0 25%,#0b0c12 0 50%) 0 0/24px 24px}
+.viewport.fit canvas{max-width:100%;max-height:100%;width:auto;height:auto}
+canvas#out{display:block;cursor:ew-resize;box-shadow:0 10px 40px #0008}
+.drop{position:absolute;inset:24px;border:2px dashed #3a3f57;border-radius:18px;display:grid;place-items:center;text-align:center;color:var(--muted);cursor:pointer}
+.drop.hover{border-color:var(--accent);background:#ff6a0014}
+.drop .big{font-size:22px;color:var(--text);font-weight:700;margin-bottom:6px}
+.tag{position:absolute;top:12px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#000a;pointer-events:none}
+.tag.l{left:12px}.tag.r{right:12px}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
+.bar input[type=range]{flex:1;min-width:120px}
+.stats{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;direction:ltr}
+.stats b{color:var(--good)}
+.prog{height:4px;background:var(--line);border-radius:4px;overflow:hidden;flex-basis:100%;display:none}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.note{font-size:11.5px;color:var(--muted);margin-top:6px}
+.chk{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:8px}
+@media (max-width:860px){main{grid-template-columns:1fr;grid-template-rows:55vh auto}aside{order:2;border-left:0;border-top:1px solid var(--line)}}
+
+.who{color:var(--muted);font-size:12px;direction:ltr}
+#app{display:flex;flex-direction:column;height:100%}
+#gate{min-height:100%;display:grid;place-items:center;padding:20px;background:radial-gradient(700px 500px at 50% 0,#ff6a0026,transparent 60%),var(--bg)}
+.gbox{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:32px 28px;text-align:center}
+.gbox h2{font-family:Assistant,sans-serif;font-weight:800;font-size:28px;margin:10px 0 6px}
+.gbox p{color:var(--muted);margin:0 0 20px;font-size:15px}
+.gbox .badge{display:inline-block;background:#ff6a0020;color:var(--accent2);font-weight:800;font-family:Assistant,sans-serif;padding:2px 14px;border-radius:99px;font-size:13px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border-radius:99px;border:0;background:#fff;color:#222;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.gbtn:hover{filter:brightness(.93)}
+.gbtn svg{width:20px;height:20px}
+.gerr{color:#ff8a8a;font-size:13px;margin-top:12px}
+.glink{display:inline-block;margin-top:14px;color:var(--muted);font-size:13px;background:none;border:0;cursor:pointer;text-decoration:underline;font:inherit}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gbox" id="gbox"><p>טוען…</p></div>
+</div>
+<div id="app" hidden>
+<header>
+  <div class="logo">TM</div>
+  <div><h1>TigerManPlus · שיפור איכות AI</h1><div class="sub">GPU · עיבוד בזמן אמת · הכל רץ אצלך במחשב</div></div>
+  <div class="sp"></div>
+  <span class="who" id="who"></span>
+  <a class="btn" href="./" title="חזרה לאתר">🏠 לאתר</a>
+  <button class="btn" id="logoutBtn">יציאה</button>
+  <button class="btn" id="openBtn">📂 פתח וידאו</button>
+  <button class="btn" id="snapBtn" disabled>📸 צילום PNG</button>
+  <button class="btn primary" id="exportBtn" disabled>⬇ ייצוא וידאו</button>
+</header>
+<main>
+  <aside id="panel">
+    <div class="sec">
+      <h3>⚡ פריסטים חכמים</h3>
+      <div class="presets" id="presets"></div>
+    </div>
+    <div class="sec">
+      <h3>🔍 הגדלת רזולוציה (Upscale)</h3>
+      <div class="row"><label>רזולוציית יעד</label>
+        <select id="scale">
+          <option value="x1">מקורי (1x)</option>
+          <option value="x1.5">1.5x</option>
+          <option value="x2" selected>2x</option>
+          <option value="x3">3x</option>
+          <option value="x4">4x</option>
+          <option value="h720">HD 720p</option>
+          <option value="h1080">Full HD 1080p</option>
+          <option value="h1440">2K 1440p</option>
+          <option value="h2160">4K 2160p</option>
+        </select>
+      </div>
+      <div id="g-up"></div>
+    </div>
+    <div class="sec"><h3>✨ שחזור פרטים</h3><div id="g-detail"></div></div>
+    <div class="sec"><h3>☀️ תאורה</h3><div id="g-light"></div></div>
+    <div class="sec"><h3>🎨 צבע</h3><div id="g-color"></div></div>
+    <div class="sec"><h3>🎞 אפקטים</h3><div id="g-fx"></div></div>
+    <div class="sec">
+      <h3>💾 ייצוא</h3>
+      <div class="row"><label>איכות (Bitrate)</label>
+        <select id="quality">
+          <option value="0.08">רגילה</option>
+          <option value="0.15" selected>גבוהה</option>
+          <option value="0.3">מקסימלית</option>
+        </select>
+      </div>
+      <label class="chk"><input type="checkbox" id="withAudio" checked> לכלול אודיו</label>
+      <div class="note">הייצוא רץ בזמן אמת על כרטיס המסך, בפורמט MP4 (או WebM אם הדפדפן לא תומך).</div>
+      <button class="btn" id="resetBtn" style="width:100%;margin-top:10px">↺ איפוס הכל</button>
+    </div>
+  </aside>
+  <section class="stage">
+    <div class="viewport fit" id="vp">
+      <canvas id="out" hidden></canvas>
+      <span class="tag l" id="tagL" hidden>מקור</span>
+      <span class="tag r" id="tagR" hidden>משופר ✨</span>
+      <div class="drop" id="drop">
+        <div><div class="big">גרור לכאן וידאו או לחץ לבחירה</div>MP4 · MOV · WebM · MKV</div>
+      </div>
+    </div>
+    <div class="bar">
+      <button class="btn" id="playBtn" disabled>▶</button>
+      <input type="range" id="seek" min="0" max="1000" value="0" disabled>
+      <span class="stats" id="time">0:00 / 0:00</span>
+      <button class="btn" id="cmpBtn" disabled title="השוואה לפני/אחרי">◧ השוואה</button>
+      <button class="btn" id="zoomBtn" disabled title="תצוגת פיקסלים 1:1">🔎 1:1</button>
+      <span class="stats" id="stats"></span>
+      <div class="prog" id="prog"><i></i></div>
+    </div>
+  </section>
+</main>
+<input type="file" id="file" accept="video/*" hidden>
+<video id="vid" playsinline crossorigin="anonymous" hidden></video>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="auth.js?v=1"></script>
+<script>
+(async () => {
+  const box = document.getElementById("gbox");
+  const G = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>';
+  const head = '<span class="badge">👑 פרמיום</span><h2>שיפור איכות AI</h2>';
+  const show = (h) => (box.innerHTML = head + h);
+  if (!TM.ready) { show('<p>האתר עדיין לא חובר ל-Supabase.<br>מלאו את config.js לפי ההוראות.</p>'); return; }
+  const loginUI = (err) => {
+    show('<p>הכלי זמין למשתמשי פרמיום בלבד. היכנסו עם חשבון גוגל.</p><button class="gbtn" id="gl">' + G + 'כניסה עם גוגל</button>' + (err ? '<div class="gerr">' + err + '</div>' : ''));
+    document.getElementById("gl").onclick = () => TM.login();
+  };
+  const session = await TM.session();
+  if (!session) { loginUI(); return; }
+  let profile;
+  try { profile = await TM.profile(session.user.id); } catch (e) { loginUI("שגיאה בטעינת החשבון: " + e.message); return; }
+  if (!TM.isPremium(profile)) {
+    show('<p>שלום ' + TM.esc(profile?.name || session.user.email) + ',<br>החשבון שלך עדיין לא פרמיום. פנו אליי בדיסקורד כדי להצטרף.</p><a class="gbtn" style="background:#5865f2;color:#fff;text-decoration:none" href="' + TM.discordUrl + '" target="_blank" rel="noopener">דיסקורד</a><button class="glink" id="lo">יציאה / החלפת חשבון</button>');
+    document.getElementById("lo").onclick = () => TM.logout();
+    return;
+  }
+  document.getElementById("gate").hidden = true;
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").hidden = false;
+  document.getElementById("who").textContent = session.user.email;
+  document.getElementById("logoutBtn").onclick = () => TM.logout();
+  const s = document.createElement("script"); s.src = "enhancer-tool.js?v=1"; document.body.appendChild(s);
+})();
+</script>
+</body>
+</html>

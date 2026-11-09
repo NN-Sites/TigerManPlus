@@ -30,7 +30,7 @@ const CLIPS = [
     id: "zahavi",
     name: "קליפים של ערן זהבי",
     emoji: "🎬",
-    badges: [],
+    badges: ["4K", "60FPS"],
     url: "https://drive.google.com/file/d/1kYudo0TE2Ue5uTFJUmbZyVvkBwziYHhr/view?usp=drive_link",
   },
 ];

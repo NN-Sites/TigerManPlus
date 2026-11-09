@@ -28,12 +28,13 @@ const CLIPS = [
     id: "ramzi",
     name: "קליפים של ראמזי – קופה ראשית",
     emoji: "🎬",
-    // img: "assets/ramzi.jpg",  // תמונת הקליפ – להוסיף אחרי שהקובץ בריפו
+    img: "assets/ramzi.webp",
     badges: ["4K", "120FPS", "CC"],
     url: "#REPLACE_WITH_RAMZI_DOWNLOAD_LINK",
   },
   {
     id: "franco",
+    img: "assets/franco.webp",
     name: "קליפים של פרנקו – קופה ראשית",
     emoji: "🎬",
     badges: ["4K", "120FPS", "CC"],
@@ -41,6 +42,7 @@ const CLIPS = [
   },
   {
     id: "zahavi",
+    img: "assets/zahavi.jpg",
     name: "קליפים של ערן זהבי",
     emoji: "🎬",
     badges: ["4K", "60FPS"],

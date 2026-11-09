@@ -28,8 +28,8 @@ const CLIPS = [
     id: "ramzi",
     name: "קליפים של ראמזי – קופה ראשית",
     emoji: "🎬",
-    img: "assets/ramzi.webp",
-    badges: ["4K", "120FPS", "CC"],
+    img: "assets/ramzi-8k.webp",
+    badges: ["8K", "120FPS", "CC"],
     url: "https://drive.google.com/file/d/1Ts3-MnBbHbHYKQSMR7pbPbN9_uBt9j2A/view?usp=drive_link",
   },
   {

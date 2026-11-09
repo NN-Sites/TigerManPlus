@@ -30,7 +30,7 @@ const CLIPS = [
     emoji: "🎬",
     img: "assets/ramzi.webp",
     badges: ["4K", "120FPS", "CC"],
-    url: "#REPLACE_WITH_RAMZI_DOWNLOAD_LINK",
+    url: "https://drive.google.com/file/d/1Ts3-MnBbHbHYKQSMR7pbPbN9_uBt9j2A/view?usp=drive_link",
   },
   {
     id: "franco",

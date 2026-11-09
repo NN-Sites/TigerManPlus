@@ -134,3 +134,28 @@ $("dl").addEventListener("click", () => {
 $("close").addEventListener("click", () => ($("overlay").hidden = true));
 $("overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") $("overlay").hidden = true; });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("overlay").hidden = true; });
+
+/* ====== אנימציות ====== */
+(function () {
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".rv, .card").forEach((el, i) => {
+    if (el.classList.contains("card")) { el.classList.add("rv"); el.style.transitionDelay = (i % 3) * 0.1 + "s"; }
+    io.observe(el);
+  });
+  // heading underline reveal
+  document.querySelectorAll(".sh").forEach((el) => io.observe(el));
+  // card tilt
+  if (matchMedia("(hover:hover)").matches) {
+    document.querySelectorAll(".card").forEach((c) => {
+      c.addEventListener("mousemove", (e) => {
+        const r = c.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        c.style.transition = "box-shadow .2s";
+        c.style.transform = `perspective(700px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateY(-4px)`;
+      });
+      c.addEventListener("mouseleave", () => { c.style.transition = ""; c.style.transform = ""; });
+    });
+  }
+})();

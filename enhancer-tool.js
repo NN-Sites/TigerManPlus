@@ -377,3 +377,47 @@ $('exportBtn').onclick=async()=>{
   video.addEventListener('ended',onEnd,{once:true});
   video.addEventListener('pause',onEnd,{once:true});
 };
+
+// ---------- זום וגרירה עם הגלגלת ----------
+(function () {
+  const vp = $('vp'), cv = $('out');
+  let s = 1, x = 0, y = 0, pan = null;
+  const MIN = 1, MAX = 16;
+  const apply = () => {
+    cv.style.transformOrigin = '50% 50%';
+    cv.style.transform = s === 1 && !x && !y ? '' : `translate(${x}px,${y}px) scale(${s})`;
+    cv.style.cursor = s > 1 ? (pan ? 'grabbing' : 'grab') : '';
+    if (!zoom) vp.style.overflow = s > 1 ? 'hidden' : '';
+    const z = $('zoomLevel'); if (z) { z.textContent = Math.round(s * 100) + '%'; z.hidden = s === 1; }
+  };
+  const reset = () => { s = 1; x = y = 0; apply(); };
+  vp.addEventListener('wheel', (e) => {
+    if (!loaded) return;
+    e.preventDefault();
+    const r = vp.getBoundingClientRect();
+    const px = e.clientX - (r.left + r.width / 2), py = e.clientY - (r.top + r.height / 2);
+    const s2 = Math.min(MAX, Math.max(MIN, s * Math.exp(-e.deltaY * 0.0015)));
+    if (s2 === s) return;
+    x = px - (px - x) * s2 / s; y = py - (py - y) * s2 / s; s = s2;
+    if (s === 1) { x = y = 0; }
+    apply();
+  }, { passive: false });
+  cv.addEventListener('pointerdown', (e) => {
+    if (s <= 1) return;
+    e.stopImmediatePropagation();
+    pan = { sx: e.clientX, sy: e.clientY, x, y };
+    cv.setPointerCapture(e.pointerId); apply();
+  }, true);
+  window.addEventListener('pointermove', (e) => {
+    if (!pan) return;
+    x = pan.x + e.clientX - pan.sx; y = pan.y + e.clientY - pan.sy; apply();
+  });
+  window.addEventListener('pointerup', () => { if (pan) { pan = null; apply(); } });
+  cv.addEventListener('dblclick', reset);
+  $('zoomBtn').addEventListener('click', reset);
+  video.addEventListener('loadeddata', reset);
+  const badge = document.createElement('span');
+  badge.id = 'zoomLevel'; badge.className = 'tag r'; badge.style.cssText = 'top:auto;bottom:12px;pointer-events:auto;cursor:pointer';
+  badge.title = 'לחיצה לאיפוס זום'; badge.hidden = true; badge.onclick = reset;
+  vp.appendChild(badge);
+})();

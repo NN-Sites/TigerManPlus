@@ -2,7 +2,7 @@
 const CONFIG = {
   // קישור לערוץ (הרשמה נפתחת עם חלון אישור של יוטיוב)
   channelUrl: "https://www.youtube.com/@TigerManPlus",
-  // קישור לסרטון שצריך לעשות לו לייק – החליפו בקישור לסרטון הספציפי
+  // קישור ללייק – מתעדכן אוטומטית לסרטון האחרון (latest.json), וזה הגיבוי
   likeVideoUrl: "https://www.youtube.com/@TigerManPlus/videos",
   // כמה שניות לחכות אחרי שלחצו על שני הכפתורים
   waitSeconds: 8,
@@ -50,6 +50,11 @@ $("grid").innerHTML = CLIPS.map(
     <button class="btn" data-id="${c.id}">הורדה ⬇</button>
   </article>`
 ).join("");
+
+fetch("latest.json", { cache: "no-store" })
+  .then((r) => r.json())
+  .then((d) => { if (d.id) CONFIG.likeVideoUrl = "https://www.youtube.com/watch?v=" + d.id; })
+  .catch(() => {});
 
 const store = {
   get: () => { try { return localStorage.getItem("tmp_unlocked") === "1"; } catch { return false; } },

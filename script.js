@@ -9,7 +9,15 @@ const CONFIG = {
   discordUrl: "https://discord.gg/JZJ8cC3AZj",
 };
 
-/* ====== מדריכים – נפתחים ביוטיוב ======
+/* ====== כלים ======
+   status: "soon" = בקרוב (לא לחיץ) | "live" = זמין, ואז מוסיפים url. */
+const TOOLS = [
+  { name: "שיפור איכות AI", desc: "מעלים וידאו ומקבלים אותו חד, נקי ובאיכות גבוהה יותר – עד 4K.", icon: "✨", status: "soon" },
+  { name: "מחיקת רקע מתמונה", desc: "מוחקים רקע מתמונה בלחיצה אחת ומקבלים PNG שקוף, מוכן לעריכה.", icon: "🖼️", status: "soon" },
+  { name: "יוצר CC", desc: "יוצרים צבעים ותיקוני CC מקצועיים לקליפים, בלי להתעסק עם הגדרות.", icon: "🎨", status: "soon" },
+];
+
+/* ====== מדריכים וסאונדים – נפתחים ביוטיוב ======
    videoId = החלק אחרי youtu.be/ . להוספת מדריך – עוד שורה. */
 const SOUNDS = [
   { videoId: "wrM-V9A2OF0", name: "Sem Pensar Phonk" },
@@ -66,6 +74,26 @@ $("grid").innerHTML = CLIPS.map(
     <button class="btn" data-id="${c.id}">הורדה ⬇</button>
   </article>`
 ).join("");
+
+$("toolsGrid").innerHTML = TOOLS.map((t) => {
+  const live = t.status === "live" && t.url;
+  return `<article class="card tool">
+    <div class="tico">${t.icon}</div>
+    <h3>${t.name}</h3>
+    <p class="tdesc">${t.desc}</p>
+    ${live ? `<a class="btn" href="${t.url}" target="_blank" rel="noopener">לפתיחת הכלי</a>` : `<span class="btn btn-off">בקרוב</span>`}
+  </article>`;
+}).join("");
+
+const videoCards = (list, label, btn) => list.map(
+  (g) => `<a class="card" href="https://youtu.be/${g.videoId}" target="_blank" rel="noopener">
+    <div class="thumb"><img src="https://img.youtube.com/vi/${g.videoId}/hqdefault.jpg" alt="${g.name}" loading="lazy"><span class="play">${label}</span></div>
+    <h3>${g.name}</h3>
+    <span class="btn">${btn}</span>
+  </a>`
+).join("");
+$("guidesGrid").innerHTML = videoCards(GUIDES, "▶ ביוטיוב", "לצפייה במדריך");
+$("soundsGrid").innerHTML = videoCards(SOUNDS, "🎵 ביוטיוב", "להאזנה");
 
 function refreshLatest() {
   fetch("latest.json?t=" + Date.now(), { cache: "no-store" })

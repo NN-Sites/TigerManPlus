@@ -24,7 +24,14 @@ const CLIPS = [
     name: "קליפים של פרנקו – קופה ראשית",
     emoji: "🎬",
     badges: ["4K", "120FPS", "CC"],
-    url: "#REPLACE_WITH_FRANCO_DOWNLOAD_LINK",
+    url: "https://drive.google.com/file/d/1t5-FVKVF5xp3PY1MOsSB6nN48aoqUhto/view?usp=drive_link",
+  },
+  {
+    id: "zahavi",
+    name: "קליפים של ערן זהבי",
+    emoji: "🎬",
+    badges: [],
+    url: "https://drive.google.com/file/d/1kYudo0TE2Ue5uTFJUmbZyVvkBwziYHhr/view?usp=drive_link",
   },
 ];
 
